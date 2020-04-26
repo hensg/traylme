@@ -1,0 +1,18 @@
+body {
+  font-family: 'SF Pro Text', 'SF Pro Icons', 'Helvetica Neue', 'Helvetica',
+    'Arial', sans-serif;
+  width: 480px;
+  margin: 1rem auto;
+	text-align: center;
+}
+
+table {
+  padding: 5px 1px 1px;
+	margin: 1rem auto;
+	border-collapse: collapse;
+  width: 100%;
+}
+
+td {
+	text-align: left;
+}
