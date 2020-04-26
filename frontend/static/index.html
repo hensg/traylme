@@ -1,23 +1,24 @@
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		<meta charset="UTF-8">
-		<title>uu short - we short your long URL to a short URL</title>
-		<meta name="description" content="Generate a short URL that maps to a long URL. Users can submit a long URL and we generate a new random URL with few caracters. Moreover, we work as a proxy, when a user try to access one of our generated URLs we redirect the user to the long URL registered in our database"/>
-	</head>
-	<body>
-			<h1>uu short<p style="font-size: 12px; color: grey;">We short your long URL</p></h1>
-			<form id="url-to-short-form">
-				<span>Type your long URL:</span>
-				<input id="input-original-url" type="text"/>
-				<input type="submit">
-			</form>
-			<table id="table-urls-shorted" style="visibility: hidden">
-				<caption><h4>Your URLs shorteds</h4></caption>
-				<tbody id="table-urls-shorted-body">
-				</tbody>
-			</table>
-	</body>
-	<script src="./index.js"></script>
-	<link rel="stylesheet" type="text/css" href="index.css">
+  <head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="index.css"/>
+    <link rel="icon" href="favicon.png" type="image/png" sizes="16x16 32x32"/>
+    <title>uu short - we short your long URL to a short URL</title>
+    <meta name="description" content="Generate a short URL that maps to a long URL. Users can submit a long URL and we generate a new random URL with few caracters. Moreover, we work as a proxy, when a user try to access one of our generated URLs we redirect the user to the long URL registered in our database"/>
+  </head>
+  <body>
+    <h1>uu short<p style="font-size: 12px; color: grey;">We short your long URL</p></h1>
+    <form id="url-to-short-form">
+      <span>Type your long URL:</span>
+      <input id="input-original-url" type="text"/>
+      <input type="submit">
+    </form>
+    <table id="table-urls-shorted" style="visibility: hidden">
+      <caption><h4>Your URLs shorteds</h4></caption>
+      <tbody id="table-urls-shorted-body">
+      </tbody>
+    </table>
+  </body>
+  <script src="./index.js"></script>
 </html>
