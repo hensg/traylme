@@ -1,0 +1,48 @@
+{
+    "variables": {
+        "aws_access_key": "{{env `AWS_ACCESS_KEY_ID`}}",
+        "aws_secret_key": "{{env `AWS_SECRET_ACCESS_KEY`}}",
+        "region":         "us-east-1"
+    },
+    "builders": [
+        {
+            "instance_type": "t3a.nano",
+            "access_key": "{{user `aws_access_key`}}",
+            "secret_key": "{{user `aws_secret_key`}}",
+            "ami_name": "nginx-web-{{timestamp}}",
+            "region": "{{user `region`}}",
+            "vpc_id": "vpc-0ec413e033eaf030b",
+            "subnet_id": "subnet-0177e946e0be1d498",
+            "source_ami": "ami-085925f297f89fce1",
+            "ssh_username": "ubuntu",
+            "ssh_keypair_name": "packer-ami-builder",
+            "ssh_private_key_file": "~/.ssh/packer-ami-builder.pem",
+            "type": "amazon-ebs",
+            "associate_public_ip_address": true,
+            "force_deregister": true,
+            "tags": {
+              "Name": "nginx-web"
+            }
+        }
+    ],
+    "provisioners": [
+        {
+          "type": "file",
+          "source": "confs",
+          "destination": "confs"
+        },
+        {
+          "type": "file",
+          "source": "cron_certbot",
+          "destination": "cron_certbot"
+        },
+        {
+            "environment_vars": [
+                "AWS_ACCESS_KEY_ID={{user `aws_access_key`}}",
+                "AWS_SECRET_ACCESS_KEY={{user `aws_secret_key`}}"
+            ],
+            "type": "shell",
+            "script": "install-config-nginx.sh"
+        }
+    ]
+}
