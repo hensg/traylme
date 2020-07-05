@@ -63,6 +63,7 @@ http {
 
   upstream anonapi {
     zone anonymousapi 64k;
-    server host.docker.internal:8080;
+    server anonymousapi.trayl.me:8080;
+    #server host.docker.internal:8080;
   }
 }

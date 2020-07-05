@@ -65,7 +65,7 @@ resource "aws_security_group" "ssh" {
     self      = true
     from_port = 22
     to_port   = 22
-    cidr_blocks = ["37.201.225.0/28"]
+    cidr_blocks = ["37.201.225.82/32"]
   }
 }
 

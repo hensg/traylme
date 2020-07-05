@@ -6,14 +6,14 @@ provider "aws" {
 data "aws_vpc" "main" {
   filter {
     name = "tag:Name"
-    values = ["main-public"]
+    values = ["main-private"]
   }
 }
 
-data "aws_subnet" "us_east_1a_public" {
+data "aws_subnet" "us_east_1a_private" {
   filter {
     name = "tag:Name"
-    values = ["main-public-us-east-1a"]
+    values = ["main-us-east-1a"]
   }
 }
 
@@ -27,27 +27,40 @@ resource "aws_security_group" "db" {
     self      = true
     from_port = 3306
     to_port   = 3306
-    cidr_blocks = [data.aws_vpc.main.cidr_block]
+    cidr_blocks = [data.aws_subnet.us_east_1a_private.cidr_block]
   }
   ingress {
     protocol  = "tcp"
     self      = true
     from_port = 22
     to_port   = 22
-    cidr_blocks = ["0.0.0.0/0"] # ["10.2.0.0/16"]
+    cidr_blocks = ["10.10.0.0/22"] #vpn
+  }
+  ingress {
+    protocol  = "-1"
+    self      = true
+    from_port = 0
+    to_port   = 0
+    cidr_blocks = [data.aws_subnet.us_east_1a_private.cidr_block] #all trafic inside subnet
   }
   egress {
     protocol  = "tcp"
     from_port = 3306
     to_port   = 3306
-    cidr_blocks = [data.aws_vpc.main.cidr_block]
+    cidr_blocks = [data.aws_subnet.us_east_1a_private.cidr_block]
+  }
+  egress {
+    protocol  = "-1"
+    from_port = 0
+    to_port   = 0
+    cidr_blocks = [data.aws_subnet.us_east_1a_private.cidr_block] #all trafic inside subnet
   }
 }
 
 resource "aws_instance" "mysql_master" {
-  ami           = "ami-0dcab426e043a79ef"
+  ami           = "ami-035e6c3091a04761a"
   instance_type = "t3a.small"
-  subnet_id     = data.aws_subnet.us_east_1a_public.id
+  subnet_id     = data.aws_subnet.us_east_1a_private.id
   vpc_security_group_ids = [aws_security_group.db.id]
   key_name = "packer-ami-builder"
 
@@ -68,7 +81,7 @@ resource "aws_instance" "mysql_master" {
     destination = "/tmp/master.sh"
     connection {
       type = "ssh"
-      host = aws_instance.mysql_master.public_ip
+      host = aws_instance.mysql_master.private_ip
       user = "admin"
       private_key = file("~/.ssh/packer-ami-builder.pem")
     }
@@ -77,7 +90,7 @@ resource "aws_instance" "mysql_master" {
   provisioner "remote-exec" {
     connection {
       type = "ssh"
-      host = aws_instance.mysql_master.public_ip
+      host = aws_instance.mysql_master.private_ip
       user = "admin"
       private_key = file("~/.ssh/packer-ami-builder.pem")
     }
@@ -104,9 +117,9 @@ resource "aws_route53_record" "mysql_master_dns" {
 }
 
 resource "aws_instance" "mysql_slave" {
-  ami           = "ami-0dcab426e043a79ef"
+  ami           = "ami-035e6c3091a04761a"
   instance_type = "t3a.small"
-  subnet_id     = data.aws_subnet.us_east_1a_public.id
+  subnet_id     = data.aws_subnet.us_east_1a_private.id
   vpc_security_group_ids = [aws_security_group.db.id]
   key_name = "packer-ami-builder"
 
@@ -127,7 +140,7 @@ resource "aws_instance" "mysql_slave" {
     destination = "/tmp/slave.sh"
     connection {
       type = "ssh"
-      host = aws_instance.mysql_slave.public_ip
+      host = aws_instance.mysql_slave.private_ip
       user = "admin"
       private_key = file("~/.ssh/packer-ami-builder.pem")
     }
@@ -136,7 +149,7 @@ resource "aws_instance" "mysql_slave" {
   provisioner "remote-exec" {
     connection {
       type = "ssh"
-      host = aws_instance.mysql_slave.public_ip
+      host = aws_instance.mysql_slave.private_ip
       user = "admin"
       private_key = file("~/.ssh/packer-ami-builder.pem")
     }
