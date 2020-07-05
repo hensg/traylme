@@ -1,0 +1,36 @@
+.TracedUrlsList {
+  padding: 0 1rem;
+  font-size: 0.8rem;
+}
+
+.TracedUrlsList li {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.TraceUrlsList li, a {
+  color: inherit;
+  text-decoration: none;
+  color: #468fe3;
+}
+
+.url-detail-grid {
+  width: 100%;
+  border-top: solid #EEE 1px;
+  padding: 1rem 0;
+  margin: 0 1rem;
+  display: grid;
+  grid-template-columns: 100%;
+  grid-template-rows: 25px 30px;
+}
+
+.url-detail-traceable {
+  text-decoration: none;
+  padding-right: 2px;
+}
+.url-detail-original {
+}
+.url-detail-metrics {
+}
