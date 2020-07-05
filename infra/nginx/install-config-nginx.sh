@@ -13,17 +13,17 @@ sudo apt-get update
 sudo apt-get install -y nginx awscli certbot python-certbot-nginx
 
 echo "Creating dirs"
-sudo mkdir -p /var/www/uushort.com/
-sudo mkdir -p /var/nginx/logs
+sudo mkdir -p /var/www/trayl.me/
 sudo mkdir -p /var/nginx/cache
+sudo mkdir -p /var/logs/nginx
 
 echo "S3 static files synchronizing"
-aws s3 sync s3://uushort-static-files/static /var/www/uushort.com
+aws s3 sync s3://trayl-static-files/static /var/www/trayl.me
 
 echo "Sync certbot ssl files"
-sudo mkdir -p /etc/letsencrypt/live/uushort.com
-aws s3 sync s3://uushort-secrets-files/sslcerts /etc/letsencrypt/live/uushort.com/
-sudo chown -R root /etc/letsencrypt/live/uushort.com
+sudo mkdir -p /etc/letsencrypt/live/trayl.me
+aws s3 sync s3://trayl-secrets-files/sslcerts /etc/letsencrypt/live/trayl.me
+sudo chown -R root /etc/letsencrypt/live/trayl.me
 
 echo "Moving certbot cron"
 sudo mv cron_certbot /etc/cron.d/

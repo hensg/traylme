@@ -1,0 +1,42 @@
+version: '3.8'
+services:
+  mysql-master:
+    image: mysqlx
+    container_name: mysql-master
+    command: /data/scripts/master.sh
+    ports:
+      - 3306:3306
+    networks:
+      - database
+
+  mysql-slave:
+    image: mysqlx
+    container_name: mysql-slave
+    command: /data/scripts/slave.sh mysql-master
+    ports:
+      - 3307:3306
+    depends_on:
+      - mysql-master
+    networks:
+      - database
+
+  adminer:
+    image: adminer
+    ports:
+      - 8088:8080
+    networks:
+      - database
+    links:
+      - mysql-master:db
+
+  adminer_slave:
+    image: adminer
+    ports:
+      - 8089:8080
+    networks:
+      - database
+    links:
+      - mysql-slave:db
+
+networks:
+  database:

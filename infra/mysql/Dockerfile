@@ -1,0 +1,15 @@
+FROM debian:10
+
+ARG AWS_ACCESS_KEY_ID
+ENV AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID
+RUN echo $AWS_ACCESS_KEY_ID
+
+ARG AWS_SECRET_ACCESS_KEY
+ENV AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY
+
+WORKDIR /home/mysql
+
+ADD scripts /data/scripts
+RUN /data/scripts/install_mysql.sh
+
+ADD config /etc/mysql/

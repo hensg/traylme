@@ -1,0 +1,68 @@
+http {
+  userid         on;
+  userid_name    uid;
+  userid_domain  localhost;
+  userid_path    /;
+  userid_expires 365d;
+  userid_p3p     'policyref="/w3c/p3p.xml", CP="CUR ADM OUR NOR STA NID"';
+  map $uid_got $userid {
+    ~*uid=(.+)$ $1;
+    default 'not-extracted';
+  }
+
+  include       mime.types;
+  default_type  text/html;
+
+  log_format  main  '$remote_addr - $remote_user [$time_local] "$request" '
+    '$status $body_bytes_sent "$http_referer" '
+    '"$http_user_agent" "$http_x_forwarded_for"'
+    '"$uid_got" "$userid"';
+
+  access_log  /var/log/nginx/trayl.me.access.log  main;
+  error_log  /var/log/nginx/trayl.me.error.log;
+
+  gzip  on;
+
+  proxy_cache_path /var/nginx/cache keys_zone=STATIC:10m inactive=24h max_size=30m;
+
+  limit_req_zone $binary_remote_addr zone=one:20m  rate=20r/s; # by user addr
+  limit_conn_zone $server_name zone=servers:10m; # by server
+
+  server {
+    listen       80;
+    server_name  trayl.me;
+    return 301 https://$server_name$request_uri;
+  }
+
+  server {
+    listen       443 ssl;
+    server_name  trayl.me;
+
+    ssl_certificate /etc/letsencrypt/live/trayl.me/fullchain1.pem;
+    ssl_certificate_key /etc/letsencrypt/live/trayl.me/privkey1.pem;
+
+    location / {
+      proxy_buffering        on;
+      proxy_cache            STATIC;
+      proxy_cache_valid      200  1d;
+
+      root   /var/www/trayl.me/;
+      index  index.html;
+    }
+    error_page  404              /404.html;
+
+    location /anonapi/ {
+      limit_req zone=one;
+      limit_conn servers 1000; # sever
+
+      proxy_buffers 16 4k;
+      proxy_buffer_size 2k;
+      proxy_pass http://anonapi/anon_users/$userid/urls;
+    }
+  }
+
+  upstream anonapi {
+    zone anonymousapi 64k;
+    server host.docker.internal:8080;
+  }
+}

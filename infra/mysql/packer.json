@@ -1,0 +1,65 @@
+{
+  "variables": {
+    "aws_access_key": "{{env `AWS_ACCESS_KEY_ID`}}",
+    "aws_secret_key": "{{env `AWS_SECRET_ACCESS_KEY`}}",
+    "region":         "us-east-1"
+  },
+  "builders": [
+    {
+      "spot_instance_types": ["t3.small", "t3a.small"],
+      "spot_price": "0.1",
+      "access_key": "{{user `aws_access_key`}}",
+      "secret_key": "{{user `aws_secret_key`}}",
+      "ami_name": "mysql-{{timestamp}}",
+      "region": "{{user `region`}}",
+      "vpc_id": "vpc-0ec413e033eaf030b",
+      "subnet_id": "subnet-0177e946e0be1d498",
+      "source_ami": "ami-0f31df35880686b3f",
+      "ssh_username": "admin",
+      "ssh_keypair_name": "packer-ami-builder",
+      "ssh_private_key_file": "~/.ssh/packer-ami-builder.pem",
+      "type": "amazon-ebs",
+      "associate_public_ip_address": true,
+      "force_deregister": true,
+      "tags": {
+        "Name": "mysql"
+      }
+    }
+  ],
+  "provisioners": [
+    {
+      "type": "file",
+      "source": "config",
+      "destination": "/tmp/"
+    },
+    {
+      "type": "file",
+      "source": "scripts",
+      "destination": "/tmp/"
+    },
+    {
+      "type": "shell",
+      "inline": [
+        "sudo mkdir -p /data/scripts",
+        "sudo cp -r /tmp/scripts /data/"
+      ]
+    },
+    {
+      "environment_vars": [
+          "AWS_ACCESS_KEY_ID={{user `aws_access_key`}}",
+          "AWS_SECRET_ACCESS_KEY={{user `aws_secret_key`}}"
+      ],
+      "type": "shell",
+      "script": "./scripts/install_mysql.sh",
+      "execute_command": "sudo env {{ .Vars }} {{ .Path }}"
+    },
+    {
+      "type": "shell",
+      "inline": [
+        "sudo cp -r /tmp/config/* /etc/mysql",
+        "sudo chown -R mysql:mysql /etc/mysql/",
+        "sudo ls -l /etc/mysql"
+      ]
+    }
+  ]
+}
