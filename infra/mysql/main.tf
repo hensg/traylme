@@ -6,7 +6,7 @@ provider "aws" {
 data "aws_vpc" "main" {
   filter {
     name = "tag:Name"
-    values = ["main-private"]
+    values = ["main"]
   }
 }
 
@@ -14,6 +14,15 @@ data "aws_subnet" "us_east_1a_private" {
   filter {
     name = "tag:Name"
     values = ["main-us-east-1a"]
+  }
+}
+
+data "aws_ami" "mysql" {
+  owners = ["self"]
+  most_recent = true
+  filter {
+    name = "tag:Name"
+    values = ["mysql"]
   }
 }
 
@@ -58,7 +67,7 @@ resource "aws_security_group" "db" {
 }
 
 resource "aws_instance" "mysql_master" {
-  ami           = "ami-035e6c3091a04761a"
+  ami           = data.aws_ami.mysql.id
   instance_type = "t3a.small"
   subnet_id     = data.aws_subnet.us_east_1a_private.id
   vpc_security_group_ids = [aws_security_group.db.id]
@@ -116,15 +125,15 @@ resource "aws_route53_record" "mysql_master_dns" {
   records         = [aws_instance.mysql_master.private_ip]
 }
 
-resource "aws_instance" "mysql_slave" {
-  ami           = "ami-035e6c3091a04761a"
+resource "aws_instance" "mysql_slave_1" {
+  ami           = data.aws_ami.mysql.id
   instance_type = "t3a.small"
   subnet_id     = data.aws_subnet.us_east_1a_private.id
   vpc_security_group_ids = [aws_security_group.db.id]
   key_name = "packer-ami-builder"
 
   tags = {
-    Name = "mysql-slave"
+    Name = "mysql-slave-1"
   }
 
   credit_specification {
@@ -140,7 +149,7 @@ resource "aws_instance" "mysql_slave" {
     destination = "/tmp/slave.sh"
     connection {
       type = "ssh"
-      host = aws_instance.mysql_slave.private_ip
+      host = aws_instance.mysql_slave_1.private_ip
       user = "admin"
       private_key = file("~/.ssh/packer-ami-builder.pem")
     }
@@ -149,7 +158,7 @@ resource "aws_instance" "mysql_slave" {
   provisioner "remote-exec" {
     connection {
       type = "ssh"
-      host = aws_instance.mysql_slave.private_ip
+      host = aws_instance.mysql_slave_1.private_ip
       user = "admin"
       private_key = file("~/.ssh/packer-ami-builder.pem")
     }
@@ -163,11 +172,11 @@ resource "aws_instance" "mysql_slave" {
   }
 }
 
-resource "aws_route53_record" "mysql_slave_dns" {
+resource "aws_route53_record" "mysql_slave_1_dns" {
   zone_id         = data.aws_route53_zone.traylme.zone_id
-  name            = "mysql-slave.trayl.me"
+  name            = "mysql-slave-1.trayl.me"
   ttl             = "300"
   type            = "A"
-  records         = [aws_instance.mysql_slave.private_ip]
+  records         = [aws_instance.mysql_slave_1.private_ip]
 }
 

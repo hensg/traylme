@@ -2,7 +2,6 @@
 set -e
 set -x
 
-echo $AWS_ACCESS_KEY_ID
 export DEBIAN_FRONTEND=noninteractive
 
 groupadd mysql && useradd -r -g mysql -s /bin/false mysql
