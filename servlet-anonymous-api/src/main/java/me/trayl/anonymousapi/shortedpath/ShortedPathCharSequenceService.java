@@ -14,13 +14,17 @@ public class ShortedPathCharSequenceService {
     @Autowired
     private ShortedPathCharSequenceRepository shortedPathCharSeqRepo;
 
+    private static final char[] FIRST_CHAR_SEQUENCE = new char[] {
+            FIRST_VALID_CHAR,FIRST_VALID_CHAR,FIRST_VALID_CHAR,FIRST_VALID_CHAR
+    };
+
     @Transactional
     public ShortedPathCharSequence genenerateNewId() {
         int shardId = (int) (Thread.currentThread().getId() % ShortedPathCharSequence.SHARDING_SIZE);
         ShortedPathCharSequence dao = shortedPathCharSeqRepo
                 .findById(shardId)
                 .map(this::incrementDaoLastCharSequence)
-                .orElse(new ShortedPathCharSequence(shardId, new char[] { FIRST_VALID_CHAR }));
+                .orElse(new ShortedPathCharSequence(shardId, FIRST_CHAR_SEQUENCE));
 
         return shortedPathCharSeqRepo.save(dao);
     }
@@ -33,7 +37,7 @@ public class ShortedPathCharSequenceService {
 
     private char[] incrementCharSequence(char[] charSeq) {
         if (charSeq.length == 0) {
-            return new char[] { FIRST_VALID_CHAR };
+            return FIRST_CHAR_SEQUENCE;
         }
 
         int charSeqLength = charSeq.length;
