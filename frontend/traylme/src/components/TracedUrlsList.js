@@ -19,12 +19,12 @@ class TracedUrlsList extends React.Component {
     const itemListLI = this.props.urlList.map((item) =>
       <li key={item.id}>
         <div className="url-detail-grid">
-          <div>
+          <div className="url-and-copy">
             <a target="noopener" href={host + item.shortedPath} className="url-detail-traceable">
               {host + item.shortedPath}
             </a>
             <CopyToClipboard text={host + item.shortedPath}>
-              <input type="button" value="copy"/>
+              <input className="copy-to-clip" type="button" value="copy"/>
             </CopyToClipboard>
           </div>
           <span className="url-detail-original">{formatOriginalUrl(item.originalUrl)}</span>

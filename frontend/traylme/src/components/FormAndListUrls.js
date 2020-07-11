@@ -3,6 +3,7 @@ import Form from './Form';
 import TracedUrlsList from './TracedUrlsList';
 import axios from 'axios';
 
+
 class FormAndListUrls extends React.Component {
 
   constructor(props) {
@@ -14,6 +15,7 @@ class FormAndListUrls extends React.Component {
     };
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.host = (process.env.NODE_ENV === 'development') ? 'http://localhost:8081/' : 'https://trayl.me'
   }
 
   handleInputChange(inputValue) {
@@ -23,8 +25,10 @@ class FormAndListUrls extends React.Component {
   handleSubmit(event) {
     event.preventDefault();
     axios
-      .post('http://localhost:8080/anon_users/123/urls', {
-        originalUrl: this.state.inputValue
+      .post(this.host + '/anonapi/', {
+        originalUrl: this.state.inputValue,
+      }, {
+        withCredentials: true
       })
       .then(res => {
         console.log(res.data);
@@ -35,13 +39,14 @@ class FormAndListUrls extends React.Component {
         });
       })
       .catch(err => {
+        console.log(err);
         this.setState({ error: err.response.data.errors.originalUrl });
       });
   }
 
   componentDidMount() {
     axios
-      .get('http://localhost:8080/anon_users/123/urls')
+      .get(this.host + '/anonapi/', {withCredentials:true})
       .then(res => {
         console.log(res.data);
         this.setState({

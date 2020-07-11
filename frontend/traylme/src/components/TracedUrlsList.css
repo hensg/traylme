@@ -26,10 +26,36 @@
   grid-template-rows: 25px 30px;
 }
 
+.url-and-copy {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 80% 20%;
+  grid-template-rows: 100%;
+}
+
 .url-detail-traceable {
   text-decoration: none;
   padding-right: 2px;
 }
+.copy-to-clip {
+  background-color: white;
+  color: black;
+  border: 1px solid #008CBA;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 9px;
+  transition-duration: 0.4s;
+  cursor: pointer;
+  width: 50px;
+  height: 18px;
+  border-radius: 4px;
+}
+.copy-to-clip:hover {
+  background-color: #008CBA;
+  color: white;
+}
+
 .url-detail-original {
 }
 .url-detail-metrics {
