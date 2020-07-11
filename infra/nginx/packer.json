@@ -6,15 +6,15 @@
     },
     "builders": [
         {
-            "instance_type": "t3a.nano",
+            "instance_type": "t3a.small",
             "access_key": "{{user `aws_access_key`}}",
             "secret_key": "{{user `aws_secret_key`}}",
             "ami_name": "nginx-web-{{timestamp}}",
             "region": "{{user `region`}}",
             "vpc_id": "vpc-0736b1424cbc5e841",
             "subnet_id": "subnet-05c0cd3a81b0a3cc8",
-            "source_ami": "ami-085925f297f89fce1",
-            "ssh_username": "ubuntu",
+            "source_ami": "ami-0f31df35880686b3f",
+            "ssh_username": "admin",
             "ssh_keypair_name": "packer-ami-builder",
             "ssh_private_key_file": "~/.ssh/packer-ami-builder.pem",
             "type": "amazon-ebs",
@@ -34,7 +34,19 @@
         {
           "type": "file",
           "source": "cron_certbot",
-          "destination": "cron_certbot"
+          "destination": "/home/admin/"
+        },
+        {
+          "type": "file",
+          "source": "cron_frontend",
+          "destination": "/home/admin/"
+        },
+        {
+          "type": "shell",
+          "inline": [
+            "sudo mv /home/admin/cron_certbot /etc/cron.d/",
+            "sudo mv /home/admin/cron_frontend /etc/cron.d/"
+          ]
         },
         {
             "environment_vars": [
@@ -42,7 +54,8 @@
                 "AWS_SECRET_ACCESS_KEY={{user `aws_secret_key`}}"
             ],
             "type": "shell",
-            "script": "install-config-nginx.sh"
+            "script": "install-config-nginx.sh",
+            "execute_command":"sudo env {{ .Vars }} {{ .Path }}"
         }
     ]
 }

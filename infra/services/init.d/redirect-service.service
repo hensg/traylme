@@ -5,10 +5,9 @@ After=syslog.target network.target
 [Service]
 Type=simple
 Environment=MYSQL_HOST=mysql-slave-1.trayl.me
-Environment=SSL_KEYSTORE_PASS=$SSL_KEYSTORE_PASS
+EnvironmentFile=/etc/environment
 WorkingDirectory=/home/admin
-ExecStart=/usr/bin/java -jar -server -Xmx480M -Djavax.net.ssl.keyStore=/home/admin/client-keystore.p12 -Djavax.net.ssl.keyStorePassword=$SSL_KEYSTORE_PASS /home/admin/servlet-redirect-service-latest.jar
-Restart=on-failure
+ExecStart=/bin/sh -c '/usr/bin/java -jar -server -Xmx380M -Djavax.net.ssl.keyStore=/home/admin/client-keystore.p12 -Djavax.net.ssl.keyStorePassword=$SSL_KEYSTORE_PASS /home/admin/servlet-redirect-service-latest.jar'
 LimitNOFILE=1000
 
 [Install]

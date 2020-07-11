@@ -1,0 +1,1 @@
+*/5 * * * * root /bin/bash -c 'aws s3 sync --exact-timestamps s3://trayl-me-artifacts/frontend/traylme/build/ /var/www/trayl.me >> /tmp/front_sync.log 2>&1'

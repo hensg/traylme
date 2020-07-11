@@ -75,7 +75,7 @@ resource "aws_security_group" "services" {
 
 resource "aws_instance" "backend_services" {
   ami           = data.aws_ami.backend_services.id
-  instance_type = "t3a.small"
+  instance_type = "t3a.micro"
   subnet_id     = data.aws_subnet.us_east_1a_private.id
   vpc_security_group_ids = [aws_security_group.services.id]
   key_name = "packer-ami-builder"
@@ -101,7 +101,7 @@ resource "aws_instance" "backend_services" {
     }
 
     inline = [
-      "/bin/sh /home/admin/auto_deploy.sh",
+      "/bin/bash -c /home/admin/auto_deploy.sh",
       "sudo systemctl enable anonymous-api",
       "sudo systemctl start anonymous-api",
       "sudo systemctl enable redirect-service",

@@ -1,13 +1,13 @@
 http {
   userid         on;
   userid_name    uid;
-  userid_domain  localhost;
+  userid_domain  trayl.me;
   userid_path    /;
   userid_expires 365d;
   userid_p3p     'policyref="/w3c/p3p.xml", CP="CUR ADM OUR NOR STA NID"';
   map $uid_got $userid {
     ~*uid=(.+)$ $1;
-    default 'not-extracted';
+    default 'no-userid';
   }
 
   include       mime.types;
@@ -40,8 +40,8 @@ http {
 
     error_page  404              /404.html;
 
-    ssl_certificate /etc/letsencrypt/live/trayl.me/fullchain1.pem;
-    ssl_certificate_key /etc/letsencrypt/live/trayl.me/privkey1.pem;
+    ssl_certificate /etc/letsencrypt/live/trayl.me/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/trayl.me/privkey.pem;
 
     location / {
       proxy_buffering        on;
@@ -54,17 +54,29 @@ http {
 
     location /anonapi/ {
       limit_req zone=one;
-      limit_conn servers 1000; # sever
+      limit_conn servers 200; # sever
 
       proxy_buffers 16 4k;
       proxy_buffer_size 2k;
       proxy_pass http://anonapi/anon_users/$userid/urls;
+    }
+
+    location ~ ^/[0-9].+$ {
+      limit_req zone=one;
+      limit_conn servers 200; # sever
+
+      proxy_buffers 16 4k;
+      proxy_buffer_size 2k;
+      proxy_pass http://redirect;
     }
   }
 
   upstream anonapi {
     zone anonymousapi 64k;
     server anonymousapi.trayl.me:8080;
-    # server host.docker.internal:8080;
+  }
+  upstream redirect {
+    zone redirect 64k;
+    server redirect.trayl.me:8081;
   }
 }

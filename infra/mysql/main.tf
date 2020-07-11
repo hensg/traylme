@@ -68,7 +68,7 @@ resource "aws_security_group" "db" {
 
 resource "aws_instance" "mysql_master" {
   ami           = data.aws_ami.mysql.id
-  instance_type = "t3a.small"
+  instance_type = "t3a.micro"
   subnet_id     = data.aws_subnet.us_east_1a_private.id
   vpc_security_group_ids = [aws_security_group.db.id]
   key_name = "packer-ami-builder"
@@ -82,7 +82,7 @@ resource "aws_instance" "mysql_master" {
   }
 
   root_block_device {
-    volume_size = 15
+    volume_size = 25
   }
 
   provisioner "file" {
@@ -127,7 +127,7 @@ resource "aws_route53_record" "mysql_master_dns" {
 
 resource "aws_instance" "mysql_slave_1" {
   ami           = data.aws_ami.mysql.id
-  instance_type = "t3a.small"
+  instance_type = "t3a.micro"
   subnet_id     = data.aws_subnet.us_east_1a_private.id
   vpc_security_group_ids = [aws_security_group.db.id]
   key_name = "packer-ami-builder"
@@ -141,7 +141,7 @@ resource "aws_instance" "mysql_slave_1" {
   }
 
   root_block_device {
-    volume_size = 15
+    volume_size = 25
   }
 
   provisioner "file" {

@@ -2,6 +2,7 @@
   "variables": {
     "aws_access_key": "{{env `AWS_ACCESS_KEY_ID`}}",
     "aws_secret_key": "{{env `AWS_SECRET_ACCESS_KEY`}}",
+    "ssl_keystore_pass": "{{env `SSL_KEYSTORE_PASS`}}",
     "region":         "us-east-1"
   },
   "builders": [
@@ -34,7 +35,8 @@
     {
       "environment_vars": [
           "AWS_ACCESS_KEY_ID={{user `aws_access_key`}}",
-          "AWS_SECRET_ACCESS_KEY={{user `aws_secret_key`}}"
+          "AWS_SECRET_ACCESS_KEY={{user `aws_secret_key`}}",
+          "SSL_KEYSTORE_PASS={{user `ssl_keystore_pass`}}"
       ],
       "type": "shell",
       "script": "./install.sh",
@@ -46,9 +48,15 @@
       "destination": "/home/admin/"
     },
     {
+      "type": "file",
+      "source": "cron_services",
+      "destination": "/home/admin/"
+    },
+    {
       "type": "shell",
       "inline": [
-        "sudo mv /home/admin/init.d/* /etc/systemd/system"
+        "sudo mv /home/admin/init.d/* /etc/systemd/system",
+        "sudo mv /home/admin/cron_services /etc/cron.d/"
       ]
     }
   ]
