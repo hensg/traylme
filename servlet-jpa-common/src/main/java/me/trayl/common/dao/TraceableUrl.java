@@ -19,7 +19,7 @@ import static java.time.ZoneOffset.UTC;
 @Entity
 @Table(
     indexes = {
-        @Index(name = "traceable_url", columnList = "shortedPath", unique = true)
+        @Index(name = "traceable_url_shorted_path_idx", columnList = "shortedPath")
     }
 )
 public class TraceableUrl {

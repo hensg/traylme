@@ -15,7 +15,7 @@ public class ShortedPathCharSequenceService {
     private ShortedPathCharSequenceRepository shortedPathCharSeqRepo;
 
     private static final char[] FIRST_CHAR_SEQUENCE = new char[] {
-            FIRST_VALID_CHAR,FIRST_VALID_CHAR,FIRST_VALID_CHAR,FIRST_VALID_CHAR
+            FIRST_VALID_CHAR,FIRST_VALID_CHAR
     };
 
     @Transactional
