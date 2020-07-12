@@ -11,7 +11,7 @@ import java.util.Arrays;
 @Table
 public class ShortedPathCharSequence {
 
-    final static int SHARDING_SIZE = 1000;
+    final static int SHARDING_SIZE = 100;
     final static int FIRST_VALID_CHAR = 48; //num 0
     final static int LAST_VALID_CHAR = 122; //letter z
 
