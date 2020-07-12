@@ -21,8 +21,6 @@ http {
   access_log  /var/log/nginx/trayl.me.access.log  main;
   error_log  /var/log/nginx/trayl.me.error.log;
 
-  gzip  on;
-
   proxy_cache_path /var/nginx/cache keys_zone=STATIC:10m inactive=24h max_size=30m;
 
   limit_req_zone $binary_remote_addr zone=one:20m  rate=20r/s; # by user addr
@@ -44,6 +42,8 @@ http {
     ssl_certificate_key /etc/letsencrypt/live/trayl.me/privkey.pem;
 
     location / {
+      gzip  on;
+
       proxy_buffering        on;
       proxy_cache            STATIC;
       proxy_cache_valid      200  1d;
