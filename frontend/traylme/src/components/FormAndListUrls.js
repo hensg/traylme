@@ -3,6 +3,7 @@ import Form from './Form';
 import TracedUrlsList from './TracedUrlsList';
 import axios from 'axios';
 
+const VALID_URL_PATTERN = /^(https?:\/\/)?\w+\..{1,2083}$/i;
 
 class FormAndListUrls extends React.Component {
 
@@ -19,11 +20,16 @@ class FormAndListUrls extends React.Component {
   }
 
   handleInputChange(inputValue) {
-    this.setState({inputValue: inputValue});
+    this.setState({inputValue: inputValue, error: null});
   }
 
   handleSubmit(event) {
     event.preventDefault();
+    if (!VALID_URL_PATTERN.test(this.state.inputValue)) {
+      this.setState({ error: 'The URL seems to be invalid, please have a look' });
+      return;
+    }
+
     axios
       .post(this.host + '/anonapi/', {
         originalUrl: this.state.inputValue,
