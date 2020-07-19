@@ -2,3 +2,5 @@ rootProject.name = 'trayl'
 include 'servlet-jpa-common'
 include 'servlet-anonymous-api'
 include 'servlet-redirect-service'
+include 'redirect-count-stream'
+
