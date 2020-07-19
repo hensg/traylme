@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.net.URL;
 import java.util.Optional;
 
 @RestController
@@ -24,17 +23,20 @@ public class RedirectController {
     @Autowired
     private RedirectService redirectService;
 
+    @Autowired
+    private KafkaLogService kafkaLogService;
+
     @GetMapping(value = "/{traceableUrlPathVar}")
     public void redirect(@PathVariable String traceableUrlPathVar,
                          HttpServletResponse resp) {
         Optional<TraceableUrl> maybeTraceableUrl = this.redirectService.findOriginalUrl(traceableUrlPathVar);
 
-        URL traceableUrl = maybeTraceableUrl
-            .map(TraceableUrl::getOriginalUrl)
-            .orElseThrow(TraceableUrlNotRegisteredException::new);
+        TraceableUrl traceableUrl = maybeTraceableUrl.orElseThrow(TraceableUrlNotRegisteredException::new);
+
+        kafkaLogService.logAccess(traceableUrl.getId());
 
         resp.setStatus(302);
-        resp.setHeader("Location", traceableUrl.toString());
+        resp.setHeader("Location", traceableUrl.getOriginalUrl().toString());
 
     }
 

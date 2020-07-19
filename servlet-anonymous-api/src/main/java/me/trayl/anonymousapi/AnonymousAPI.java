@@ -11,8 +11,8 @@ import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @SpringBootApplication
-@EntityScan(basePackages = {"me.trayl.common.dao", "me.trayl.anonymousapi.shortedpath"})
-@EnableJpaRepositories(basePackages = {"me.trayl.common.dao", "me.trayl.anonymousapi.shortedpath"})
+@EntityScan(basePackages = {"me.trayl.common.dao", "me.trayl.anonymousapi"})
+@EnableJpaRepositories(basePackages = {"me.trayl.common.dao", "me.trayl.anonymousapi"})
 public class AnonymousAPI {
 
     public static void main(String[] args) {
@@ -24,7 +24,9 @@ public class AnonymousAPI {
         return new WebMvcConfigurer() {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
-                registry.addMapping("/**").allowedOrigins("http://localhost:3000", "https://trayl.me");
+                registry.addMapping("/**")
+                        .allowedOrigins("http://localhost:3000", "https://trayl.me")
+                        .allowCredentials(true);
             }
         };
     }

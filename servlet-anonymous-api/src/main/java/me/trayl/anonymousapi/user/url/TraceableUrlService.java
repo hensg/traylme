@@ -5,7 +5,6 @@ import me.trayl.common.dao.TraceableUrl;
 import me.trayl.anonymousapi.shortedpath.ShortedPathCharSequence;
 import me.trayl.common.dao.TraceableUrlRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.net.MalformedURLException;
@@ -29,6 +28,6 @@ public class TraceableUrlService {
 
 
     public List<TraceableUrl> findByCookieId(String cookieId) {
-        return  trackUrlRepository.findByAnonymousUserCookieId(cookieId, Sort.by(Sort.Direction.DESC, "createdAt"));
+        return  trackUrlRepository.findByAnonymousUserCookieId(cookieId);
     }
 }

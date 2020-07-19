@@ -9,10 +9,13 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Index;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import java.net.URL;
 import java.time.ZonedDateTime;
+import java.util.List;
 
 import static java.time.ZoneOffset.UTC;
 
@@ -47,6 +50,10 @@ public class TraceableUrl {
         this.originalUrl = originalUrl;
         this.anonymousUser = anonUser;
         this.createdAt = ZonedDateTime.now(UTC);
+    }
+
+    public TraceableUrl(long id) {
+        this.id = id;
     }
 
     public long getId() {

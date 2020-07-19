@@ -12,5 +12,5 @@ public interface TraceableUrlRepository extends CrudRepository<TraceableUrl, Lon
 
     Optional<TraceableUrl> findByShortedPath(String shortedPath);
 
-    List<TraceableUrl> findByAnonymousUserCookieId(String cookieId, Sort sort);
+    List<TraceableUrl> findByAnonymousUserCookieId(String cookieId);
 }
