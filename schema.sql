@@ -15,7 +15,7 @@ create table anonymous_user (
     cookie_id varchar(255) not null,
     created_at datetime not null,
     last_updated_at datetime not null,
-    locale char(5),
+    locale char(5)
     primary key (id)
 )
 engine = innodb
@@ -27,7 +27,7 @@ create table traceable_url (
     id bigint not null auto_increment,
     shorted_path varchar(100) not null,
     original_url varchar(2091) not null,
-    created_at date not null,
+    created_at datetime not null,
     anonymous_user_id bigint not null,
     primary key (id)
     -- foreign key (anonymous_user_id) references anonymous_user(id),
@@ -44,10 +44,11 @@ create table url_recent_hits (
     traceable_url_id bigint not null,
     access_date date not null,
     counter bigint not null,
+    `version` bigint,
     primary key (traceable_url_id, access_date)
 )
 engine = innodb
 partition by key(access_date)
-partitions 30
+partitions 35
 ;
 --todo: auto delete url_recent_hits where access_date > now + 29d
