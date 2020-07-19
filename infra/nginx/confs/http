@@ -54,16 +54,25 @@ http {
 
     location /anonapi/ {
       limit_req zone=one;
-      limit_conn servers 200; # sever
+      limit_conn servers 200;
 
       proxy_buffers 16 4k;
       proxy_buffer_size 2k;
       proxy_pass http://anonapi/anon_users/$userid/urls;
     }
 
+    location /url_recent_hits/ {
+      limit_req zone=one burst=50;
+      limit_conn servers 200;
+
+      proxy_buffers 16 4k;
+      proxy_buffer_size 2k;
+      proxy_pass http://anonapi/url_recent_hits/;
+    }
+
     location ~ ^/[0-9].+$ {
-      limit_req zone=one;
-      limit_conn servers 200; # sever
+      limit_req zone=one burst=50;
+      limit_conn servers 200;
 
       proxy_buffers 16 4k;
       proxy_buffer_size 2k;

@@ -1,0 +1,17 @@
+[Unit]
+Description=
+After=syslog.target network.target
+
+[Service]
+Type=simple
+Environment=MYSQL_HOST=mysql-master.trayl.me
+EnvironmentFile=/etc/environment
+WorkingDirectory=/home/admin
+ExecStart=/bin/sh -c '/usr/bin/java -jar -server -Xmx256M -Djavax.net.ssl.keyStore=/home/admin/client-keystore.p12 -Djavax.net.ssl.keyStorePassword=$SSL_KEYSTORE_PASS /home/admin/redirect-count-stream-latest.jar'
+LimitNOFILE=1000
+RemainAfterExit=no
+Restart=on-failure
+RestartSec=5s
+
+[Install]
+WantedBy=multi-user.target

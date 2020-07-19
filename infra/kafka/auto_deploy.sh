@@ -28,5 +28,4 @@ function restart_if_needed {
   fi
 }
 
-restart_if_needed servlet-anonymous-api
-restart_if_needed servlet-redirect-service
+restart_if_needed redirect-count-stream

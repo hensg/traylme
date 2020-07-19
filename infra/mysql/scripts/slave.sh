@@ -20,18 +20,15 @@ MASTER_LOG_FILE=`echo $MASTER_STATUS | awk {'print $1'}`
 MASTER_LOG_POS=`echo $MASTER_STATUS | awk {'print $2'}`
 
 echo "Cleaning data"
-service mysql stop
 rm -rf /opt/mysql/data
 
 echo "Initializing slave..."
 mysqld --user=mysql --initialize --server-id=2 --init-file=/data/scripts/slave.sql --verbose --log-error-verbosity=3
 
-echo "Slave initialized, starting service"
-systemctl enable mysql
-service mysql start
-
 echo "Setting master to $MASTER_HOST, log file $MASTER_LOG_FILE at position $MASTER_LOG_POS"
 sleep 3
+
+mysqld --user=mysql --server-id=2
 
 mysql -uroot -proot << EOF
   SET GLOBAL server_id = 2;

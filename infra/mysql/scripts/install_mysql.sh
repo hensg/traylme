@@ -55,5 +55,3 @@ echo "Pulling s3 certs..."
 aws s3 sync s3://trayl-secrets-files/mysql /opt/mysql/certs
 
 chown -R mysql:mysql /opt/mysql/certs
-
-systemctl disable mysql

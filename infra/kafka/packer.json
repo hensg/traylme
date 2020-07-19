@@ -1,0 +1,73 @@
+{
+  "variables": {
+    "aws_access_key": "{{env `AWS_ACCESS_KEY_ID`}}",
+    "aws_secret_key": "{{env `AWS_SECRET_ACCESS_KEY`}}",
+    "ssl_keystore_pass": "{{env `SSL_KEYSTORE_PASS`}}",
+    "region":         "us-east-1"
+  },
+  "builders": [
+    {
+      "spot_instance_types": ["t3.small", "t3a.small"],
+      "spot_price": "0.1",
+      "access_key": "{{user `aws_access_key`}}",
+      "secret_key": "{{user `aws_secret_key`}}",
+      "ami_name": "kafka-{{timestamp}}",
+      "region": "{{user `region`}}",
+      "vpc_id": "vpc-0736b1424cbc5e841",
+      "subnet_id": "subnet-05c0cd3a81b0a3cc8",
+      "source_ami": "ami-0f31df35880686b3f",
+      "ssh_username": "admin",
+      "ssh_keypair_name": "packer-ami-builder",
+      "ssh_private_key_file": "~/.ssh/packer-ami-builder.pem",
+      "type": "amazon-ebs",
+      "associate_public_ip_address": true,
+      "force_deregister": true,
+      "tags": { "Name": "kafka"
+      }
+    }
+  ],
+  "provisioners": [
+    {
+      "type": "file",
+      "source": "install.sh",
+      "destination": "/home/admin/"
+    },
+    {
+      "type": "file",
+      "source": "auto_deploy.sh",
+      "destination": "/home/admin/"
+    },
+    {
+      "type": "file",
+      "source": "environment",
+      "destination": "/home/admin/"
+    },
+    {
+      "environment_vars": [
+          "AWS_ACCESS_KEY_ID={{user `aws_access_key`}}",
+          "AWS_SECRET_ACCESS_KEY={{user `aws_secret_key`}}",
+          "SSL_KEYSTORE_PASS={{user `ssl_keystore_pass`}}"
+      ],
+      "type": "shell",
+      "script": "./install.sh",
+      "execute_command": "sudo env {{ .Vars }} {{ .Path }}"
+    },
+    {
+      "type": "file",
+      "source": "init.d",
+      "destination": "/home/admin/"
+    },
+    {
+      "type": "file",
+      "source": "config/server.properties",
+      "destination": "/home/admin/"
+    },
+    {
+      "type": "shell",
+      "inline": [
+        "sudo mv /home/admin/init.d/* /etc/systemd/system",
+        "sudo mv /home/admin/server.properties /opt/kafka/config/"
+      ]
+    }
+  ]
+}

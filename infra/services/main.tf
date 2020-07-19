@@ -102,10 +102,10 @@ resource "aws_instance" "backend_services" {
 
     inline = [
       "/bin/bash -c /home/admin/auto_deploy.sh",
-      "sudo systemctl enable anonymous-api",
-      "sudo systemctl start anonymous-api",
-      "sudo systemctl enable redirect-service",
-      "sudo systemctl start redirect-service"
+      "sudo systemctl enable servlet-anonymous-api",
+      "sudo systemctl start servlet-anonymous-api",
+      "sudo systemctl enable servlet-redirect-service",
+      "sudo systemctl start servlet-redirect-service"
     ]
   }
 }

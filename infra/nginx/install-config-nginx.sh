@@ -21,6 +21,7 @@ echo "AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY" >> /etc/environment
 echo "S3 static files synchronizing"
 #aws s3 sync s3://trayl-static-files/static /var/www/trayl.me
 aws s3 sync s3://trayl-me-artifacts/frontend/traylme/build/ /var/www/trayl.me
+sudo chown -R admin /var/www/trayl.me/
 
 echo "Sync certbot ssl files"
 sudo mkdir -p /etc/letsencrypt/live/trayl.me

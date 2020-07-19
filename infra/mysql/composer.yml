@@ -3,7 +3,7 @@ services:
   mysql-master:
     image: mysqlx
     container_name: mysql-master
-    command: /data/scripts/master.sh
+    command: /bin/bash -c '/data/scripts/master.sh && mysqld_safe --user=mysql --server-id=1'
     ports:
       - 3306:3306
     networks:
@@ -12,7 +12,7 @@ services:
   mysql-slave:
     image: mysqlx
     container_name: mysql-slave
-    command: /data/scripts/slave.sh mysql-master
+    command: /bin/bash -c '/data/scripts/slave.sh mysql-master && mysqld_safe --user=mysql --server-id=2'
     ports:
       - 3307:3306
     depends_on:
