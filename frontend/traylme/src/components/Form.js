@@ -19,6 +19,7 @@ class Form extends React.Component {
 
   render() {
     return (
+      <div className="form-container">
       <form className="Form" onSubmit={this.handleSubmit}>
 				<input
 						type="text"
@@ -28,10 +29,18 @@ class Form extends React.Component {
 						placeholder="Type your URL & press enter..."
 						title="press enter"
 				/>
-        {this.props.error &&
-          <p className="form-error-msg">{this.props.error}</p>
-        }
+        <div style={{ justifySelf: "end", display: "block" }}>
+          {this.props.error &&
+            <span className="form-error-msg">{this.props.error}</span>
+          }
+          <input
+              type="submit"
+              className="form-submit"
+              value="Submit"
+          />
+        </div>
       </form>
+      </div>
     );
   }
 }

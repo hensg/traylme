@@ -4,6 +4,8 @@ import TracedUrlsList from './TracedUrlsList';
 import axios from 'axios';
 
 const VALID_URL_PATTERN = /^(https?:\/\/)?\w+\..{1,2083}$/i;
+const HOST = (process.env.NODE_ENV === 'development') ? 'http://localhost:8080' : 'https://trayl.me';
+const ANON_API = (process.env.NODE_ENV === 'development') ? '/anon_users/1/urls' : '/anonapi/';
 
 class FormAndListUrls extends React.Component {
 
@@ -16,7 +18,6 @@ class FormAndListUrls extends React.Component {
     };
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
-    this.host = (process.env.NODE_ENV === 'development') ? 'http://localhost:8081/' : 'https://trayl.me'
   }
 
   handleInputChange(inputValue) {
@@ -31,7 +32,7 @@ class FormAndListUrls extends React.Component {
     }
 
     axios
-      .post(this.host + '/anonapi/', {
+      .post(HOST + ANON_API, {
         originalUrl: this.state.inputValue,
       }, {
         withCredentials: true
@@ -52,7 +53,7 @@ class FormAndListUrls extends React.Component {
 
   componentDidMount() {
     axios
-      .get(this.host + '/anonapi/', {withCredentials:true})
+      .get(HOST + ANON_API, {withCredentials:true})
       .then(res => {
         console.log(res.data);
         this.setState({

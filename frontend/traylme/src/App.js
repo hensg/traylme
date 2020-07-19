@@ -8,7 +8,7 @@ function App() {
     <div className="App">
       <div className="main">
         <h1>trayl.me</h1>
-        <p>We create short traceable URLs</p>
+        <p>We make short powerful links</p>
         <FormAndListUrls />
       </div>
       <Footer/>
