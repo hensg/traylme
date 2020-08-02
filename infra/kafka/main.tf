@@ -112,6 +112,7 @@ resource "aws_instance" "kafka_01" {
       "sudo systemctl start zookeeper",
       "sudo systemctl enable kafka-server",
       "sudo systemctl start kafka-server",
+      "/bin/bash /home/admin/auto_deploy.sh",
       "sudo systemctl start redirect-count-stream"
     ]
   }

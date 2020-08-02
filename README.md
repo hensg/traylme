@@ -1,6 +1,5 @@
 # https://trayl.me
-
-URL "shortener" side project
+Shorten links application 
 
 
 #### Scope:
@@ -12,8 +11,11 @@ v1 - Servlet + MySQL
 - [x] mysql follower with replica
 - [x] anonymous-api
 - [x] redirect-service
+- [x] events log + aggregation
 - [ ] cache
-- [ ] events log + aggregation
+
+v1.1 
+- [ ] lock free (not even lock by shard)
 
 
 v2 Reactive + Cassandra

@@ -7,7 +7,7 @@ Type=simple
 Environment=MYSQL_HOST=mysql-master.trayl.me
 EnvironmentFile=/etc/environment
 WorkingDirectory=/home/admin
-ExecStart=/bin/sh -c '/usr/bin/java -jar -server -Xmx400M -Djavax.net.ssl.keyStore=/home/admin/client-keystore.p12 -Djavax.net.ssl.keyStorePassword=$SSL_KEYSTORE_PASS /home/admin/servlet-anonymous-api-latest.jar'
+ExecStart=/bin/sh -c '/usr/bin/java -jar -server -Xmx256M -XX:MaxPermSize=64M -Djavax.net.ssl.keyStore=/home/admin/client-keystore.p12 -Djavax.net.ssl.keyStorePassword=$SSL_KEYSTORE_PASS /home/admin/servlet-anonymous-api-latest.jar'
 LimitNOFILE=1000
 RemainAfterExit=no
 Restart=on-failure

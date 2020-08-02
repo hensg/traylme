@@ -5,7 +5,7 @@ After=syslog.target network.target
 [Service]
 Type=simple
 EnvironmentFile=/etc/environment
-Environment=KAFKA_HEAP_OPTS="-Xmx128M"
+Environment=KAFKA_HEAP_OPTS="-Xmx128M -XX:MaxPermSize=64M"
 WorkingDirectory=/home/admin
 ExecStart=/bin/sh -c '/opt/kafka/bin/zookeeper-server-start.sh /opt/kafka/config/zookeeper.properties'
 LimitNOFILE=1000
